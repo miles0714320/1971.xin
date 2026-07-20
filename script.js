@@ -1,45 +1,59 @@
-// Smooth scroll for nav links (already handled by CSS scroll-behavior)
-// Add active section highlight on scroll
+// ── Copy-to-clipboard email button ──────────────────
+const mailBtn = document.getElementById("mail-btn");
+const mailHint = document.getElementById("mail-hint");
+const EMAIL = "luoxiang@agent.qq.com";
 
-const nav = document.getElementById("nav");
-const sections = document.querySelectorAll("section[id]");
-const navLinks = document.querySelectorAll(".nav-links a");
-
-// Highlight active nav link on scroll
-window.addEventListener("scroll", () => {
-  let current = "";
-
-  sections.forEach((section) => {
-    const sectionTop = section.offsetTop - 100;
-    if (window.scrollY >= sectionTop) {
-      current = section.getAttribute("id");
-    }
-  });
-
-  navLinks.forEach((link) => {
-    link.style.color = "";
-    if (link.getAttribute("href") === `#${current}`) {
-      link.style.color = "var(--accent)";
-    }
-  });
-});
-
-// Fade-in animation on scroll
-const observer = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = "1";
-        entry.target.style.transform = "translateY(0)";
+if (mailBtn) {
+  mailBtn.addEventListener("click", async () => {
+    try {
+      // Modern async clipboard API (needs https, we have it via Cloudflare)
+      await navigator.clipboard.writeText(EMAIL);
+      showCopied();
+    } catch {
+      // Fallback: temporary textarea + execCommand
+      const ta = document.createElement("textarea");
+      ta.value = EMAIL;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand("copy");
+        showCopied();
+      } catch {
+        // Last resort: just show the address selected
+        mailHint.textContent = "请手动复制";
+      } finally {
+        document.body.removeChild(ta);
       }
-    });
+    }
+  });
+}
+
+function showCopied() {
+  mailBtn.classList.add("copied");
+  const prev = mailHint.textContent;
+  mailHint.textContent = "已复制 ✓";
+  setTimeout(() => {
+    mailBtn.classList.remove("copied");
+    mailHint.textContent = prev;
+  }, 1800);
+}
+
+// ── Fade sections in ────────────────────────────────
+const io = new IntersectionObserver(
+  (entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) {
+        e.target.classList.add("visible");
+        io.unobserve(e.target);
+      }
+    }
   },
-  { threshold: 0.1 }
+  { threshold: 0.12 }
 );
 
-document.querySelectorAll("section, .project-card").forEach((el) => {
-  el.style.opacity = "0";
-  el.style.transform = "translateY(20px)";
-  el.style.transition = "opacity 0.6s ease, transform 0.6s ease";
-  observer.observe(el);
+document.querySelectorAll("section").forEach((el) => {
+  el.classList.add("fade-in");
+  io.observe(el);
 });
