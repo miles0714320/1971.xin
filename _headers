@@ -1,0 +1,14 @@
+# 站点级安全响应头（Pages 支持，需随部署一起上传才生效）
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Strict-Transport-Security: max-age=31536000
+
+# 静态资源缓存：文件名不含 hash，禁用 immutable（否则改动后老用户还会拿到旧文件）。
+# 改完样式/脚本若仍有旧缓存，在 CF 控制台 Caching → Configuration → Purge Everything 手动清一次。
+*.css
+  Cache-Control: public, max-age=3600
+*.js
+  Cache-Control: public, max-age=3600

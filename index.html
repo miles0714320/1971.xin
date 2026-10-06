@@ -4,10 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>罗祥 · 1971.xin</title>
-  <meta name="description" content="罗祥的个人站点。">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@300;400;500&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta name="description" content="罗祥的个人站点。写点代码、做点工具、留点想法。">
+
+  <!-- 社交分享（og 缺失会导致转发只显示裸链接）; og:image 待补一张 1200x630 图 -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="1971.xin">
+  <meta property="og:title" content="罗祥 · 1971.xin">
+  <meta property="og:description" content="罗祥的个人站点。写点代码、做点工具、留点想法。">
+  <meta property="og:url" content="https://1971.xin/">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- 字体改用系统字体栈：原外链 fonts.googleapis.com 国内直连不可达且阻塞首屏渲染 -->
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.86em' font-size='88'>羊</text></svg>">
 </head>
@@ -59,12 +66,12 @@
       <h2>联系</h2>
       <p>如果你想找我，最直接的方式是发一封邮件：</p>
       <button class="mail" id="mail-btn" type="button" aria-label="复制邮箱地址">
-        <span class="mail-addr">luoxiang@agent.qq.com</span>
+        <span class="mail-addr"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="167a63796e7f7778715677717378623867673875797b">[email&#160;protected]</a></span>
         <span class="mail-hint" id="mail-hint">点击复制</span>
       </button>
       <p class="quiet tiny">
         或者直接
-        <a href="mailto:luoxiang@agent.qq.com">用邮件客户端打开</a>。
+        <a href="/cdn-cgi/l/email-protection#7b170e1403121a151c3b1a1c1e150f550a0a55181416">用邮件客户端打开</a>。
       </p>
     </section>
 
@@ -73,6 +80,6 @@
     </footer>
   </main>
 
-  <script src="script.js"></script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="script.js"></script>
 </body>
 </html>
