@@ -23,14 +23,15 @@ jobs:
       contents: read
       deployments: write # 让 wrangler 在提交上显示部署状态
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: 上传到 Cloudflare Pages 项目 1971
-        # 还没配 token 时自动跳过，避免第一次推送就报红叉。
-        # token 配置位置：仓库 Settings → Secrets and variables → Actions
-        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
         uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           command: pages deploy . --project-name=1971 --branch=main --commit-dirty=true
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      # token 还没配时，上面这步会失败（显示红色），属正常现象。
+      # 配好一次之后就不会再失败：仓库 Settings → Secrets and variables → Actions
+      # 新增 CLOUDFLARE_API_TOKEN，权限只需 Account → Cloudflare Pages → Edit。
