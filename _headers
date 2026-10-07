@@ -1,4 +1,4 @@
-# 站点级安全响应头（Pages 支持，需随部署一起上传才生效）
+# 站点级安全响应头（Pages 解析此文件并把规则应用到静态资源响应上）
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
@@ -6,9 +6,12 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=()
   Strict-Transport-Security: max-age=31536000
 
-# 静态资源缓存：文件名不含 hash，禁用 immutable（否则改动后老用户还会拿到旧文件）。
-# 改完样式/脚本若仍有旧缓存，在 CF 控制台 Caching → Configuration → Purge Everything 手动清一次。
-*.css
+# 静态资源缓存。
+# 路径必须以 / 开头，否则规则匹配不到（踩过：写成 *.css 导致这两条规则完全失效，
+# CSS 一直沿用 Pages 默认的 max-age=14400）。
+# 文件名不含哈希，所以禁用 immutable；破缓存靠 index.html / 404.html 里的 ?v=版本号，
+# 由 GitHub Actions 在部署时替换成提交 SHA。
+/*.css
   Cache-Control: public, max-age=3600
-*.js
+/*.js
   Cache-Control: public, max-age=3600

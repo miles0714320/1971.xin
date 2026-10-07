@@ -25,6 +25,15 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: 把资源版本号替换成提交 SHA（破浏览器缓存）
+        run: |
+          SHA="${GITHUB_SHA::8}"
+          for f in index.html 404.html; do
+            sed -i -E "s#(style\.css\?v=)[^\"']*#\1${SHA}#g; s#(script\.js\?v=)[^\"']*#\1${SHA}#g" "$f"
+          done
+          echo "--- 替换结果 ---"
+          grep -n -oE "(style\.css|script\.js)\?v=[A-Za-z0-9]+" index.html 404.html
+
       - name: 上传到 Cloudflare Pages 生产环境
         uses: cloudflare/wrangler-action@v4
         with:
