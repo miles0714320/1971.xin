@@ -25,11 +25,14 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: 上传到 Cloudflare Pages 项目 1971-xin
+      - name: 上传到 Cloudflare Pages 生产环境
         uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          command: pages deploy . --project-name=1971-xin --branch=main --commit-dirty=true
+          # 不传 --branch：wrangler 会直接发到生产分支。
+          # 若传了 --branch=main 而 main 不是该项目的生产分支，
+          # 部署只会进 main.1971-xin.pages.dev 预览地址，线上不会变。
+          command: pages deploy . --project-name=1971-xin --commit-dirty=true
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
       # token 还没配时，上面这步会失败（显示红色），属正常现象。
