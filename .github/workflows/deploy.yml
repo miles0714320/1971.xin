@@ -26,7 +26,6 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: 一次性：把 Pages 项目的生产分支改为 main
-        if: false
         run: |
           curl -sS -X PATCH \
             "https://api.cloudflare.com/client/v4/accounts/d641996a2373c84db40e866c274aeb8e/pages/projects/1971-xin" \
