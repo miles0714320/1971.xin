@@ -25,18 +25,6 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: 一次性：把 Pages 项目的生产分支改为 main
-        run: |
-          curl -sS -X PATCH \
-            "https://api.cloudflare.com/client/v4/accounts/d641996a2373c84db40e866c274aeb8e/pages/projects/1971-xin" \
-            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            -d '{"production_branch":"main"}'
-          echo ""
-          curl -sS \
-            "https://api.cloudflare.com/client/v4/accounts/d641996a2373c84db40e866c274aeb8e/pages/projects/1971-xin" \
-            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}"
-
       - name: 上传到 Cloudflare Pages 生产环境
         uses: cloudflare/wrangler-action@v4
         with:
