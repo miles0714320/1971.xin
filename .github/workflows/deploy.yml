@@ -1,7 +1,7 @@
 name: Deploy 1971.xin to Cloudflare Pages
 
 # 说明：这不是 Cloudflare Pages 内置的 Git 集成（Direct Upload 项目无法启用那个），
-# 而是由我们自己调用 wrangler 把文件点名上传到现有项目 1971。
+# 而是由我们自己调用 wrangler 把文件点名上传到现有项目 1971-xin。
 # 好处：自动部署 + 版本历史 + 分支预览，且不需要重建项目、不动 DNS。
 
 on:
@@ -25,11 +25,11 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: 上传到 Cloudflare Pages 项目 1971
+      - name: 上传到 Cloudflare Pages 项目 1971-xin
         uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          command: pages project list
+          command: pages deploy . --project-name=1971-xin --branch=main --commit-dirty=true
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
       # token 还没配时，上面这步会失败（显示红色），属正常现象。
