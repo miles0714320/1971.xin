@@ -6,13 +6,21 @@
   <title>罗祥 · 1971.xin</title>
   <meta name="description" content="罗祥的个人站点。写点代码、做点工具、留点想法。">
 
-  <!-- 社交分享（og 缺失会导致转发只显示裸链接）; og:image 待补一张 1200x630 图 -->
+  <!-- 社交分享：微信 / 微博 / Twitter 转发时显示的卡片。缺 og:image 就只剩裸链接 -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="1971.xin">
+  <meta property="og:locale" content="zh_CN">
   <meta property="og:title" content="罗祥 · 1971.xin">
   <meta property="og:description" content="罗祥的个人站点。写点代码、做点工具、留点想法。">
   <meta property="og:url" content="https://1971.xin/">
+  <meta property="og:image" content="https://1971.xin/og-image.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="米色底上写着 1971，右侧一枚朱砂圆点">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://1971.xin/og-image.png">
+  <link rel="canonical" href="https://1971.xin/">
 
   <!-- 字体改用系统字体栈：原外链 fonts.googleapis.com 国内直连不可达且阻塞首屏渲染 -->
   <link rel="stylesheet" href="style.css?v=dev">
@@ -65,14 +73,11 @@
     <section class="contact">
       <h2>联系</h2>
       <p>如果你想找我，最直接的方式是发一封邮件：</p>
-      <button class="mail" id="mail-btn" type="button" aria-label="复制邮箱地址">
-        <span class="mail-addr"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="167a63796e7f7778715677717378623867673875797b">[email&#160;protected]</a></span>
-        <span class="mail-hint" id="mail-hint">点击复制</span>
-      </button>
-      <p class="quiet tiny">
-        或者直接
-        <a href="/cdn-cgi/l/email-protection#7b170e1403121a151c3b1a1c1e150f550a0a55181416">用邮件客户端打开</a>。
-      </p>
+      <div class="mail">
+        <a class="mail-addr" href="mailto:luoxiang@agent.qq.com">luoxiang@agent.qq.com</a>
+        <button class="mail-copy" id="mail-btn" type="button">复制</button>
+      </div>
+      <p class="quiet tiny" id="mail-hint" role="status" aria-live="polite">点邮箱地址可直接写邮件，或点「复制」拿去用。</p>
     </section>
 
     <footer>
@@ -80,6 +85,6 @@
     </footer>
   </main>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="script.js?v=dev"></script>
+  <script src="script.js?v=dev"></script>
 </body>
 </html>

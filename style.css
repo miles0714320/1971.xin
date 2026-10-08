@@ -7,7 +7,7 @@
   --paper-2:  #ede7db;
   --ink:      #221f1c;      /* 深墨 */
   --ink-2:    #4a453e;      /* 次级文字 */
-  --ink-3:    #837c72;      /* 弱文字 */
+  --ink-3:    #6a6359;      /* 弱文字：原 #837c72 仅 3.69:1，不达 WCAG AA */
   --line:     #d6cfc2;
   --accent:   #b7452b;      /* 朱砂 */
   --accent-2: #8f3520;
@@ -29,7 +29,7 @@
     --paper-2: #24211d;
     --ink:     #e7e2d6;
     --ink-2:   #b8b1a3;
-    --ink-3:   #7d766a;
+    --ink-3:   #938b7d;     /* 深色下同步提亮，原 #7d766a 仅 3.94:1 */
     --line:    #34302a;
     --accent:  #e88670;
     --accent-2:#f3a892;
@@ -183,7 +183,7 @@ section p:last-child { margin-bottom: 0; }
   margin-top: 2px;
 }
 
-/* ── Contact / mail button ─────────────────────── */
+/* ── Contact / mail ────────────────────────────── */
 .mail {
   display: inline-flex;
   align-items: center;
@@ -196,28 +196,45 @@ section p:last-child { margin-bottom: 0; }
   border-radius: 10px;
   padding: 10px 16px;
   margin-top: 4px;
-  cursor: pointer;
-  transition: border-color .2s, transform .1s, background .2s;
+  transition: border-color .2s, background .2s;
   box-shadow: var(--shadow);
 }
-.mail:hover {
-  border-color: var(--accent);
-}
-.mail:active { transform: translateY(1px); }
+.mail:hover { border-color: var(--accent); }
 
-.mail-hint {
+/* 邮箱本身是 mailto 链接，点一下直接写邮件 */
+.mail-addr {
+  color: var(--ink);
+  text-decoration: none;
+}
+.mail-addr:hover {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--accent);
+}
+
+/* 独立的复制按钮。原设计把 <a> 套在 <button> 里（无效 HTML），
+   并用 aria-label 覆盖了按钮内容，读屏用户永远听不到邮箱是什么。 */
+.mail-copy {
   font-family: var(--sans);
   font-size: .8rem;
   color: var(--ink-3);
-  padding-left: 12px;
+  background: none;
+  border: none;
   border-left: 1px solid var(--line);
+  padding: 2px 0 2px 12px;
+  cursor: pointer;
+  transition: color .2s;
 }
-.mail.copied {
-  background: rgba(183,69,43,.08);
-  border-color: var(--accent);
-}
-.mail.copied .mail-hint {
-  color: var(--accent);
+.mail-copy:hover { color: var(--accent); }
+.mail-copy.copied { color: var(--accent); }
+
+.mail-addr:focus-visible,
+.mail-copy:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 3px;
 }
 
 .contact .tiny { margin-top: 12px; }
@@ -261,5 +278,17 @@ footer {
   .hero { margin-bottom: 64px; }
   section { margin-bottom: 56px; }
   .mail { flex-wrap: wrap; padding: 10px 14px; }
-  .mail-hint { padding-left: 0; border-left: none; }
+  .mail-copy { padding-left: 0; border-left: none; }
+}
+
+/* ── 尊重"减少动态效果"的系统偏好 ─────────────────── */
+/* 平滑滚动与 0.8s 淡入对前庭功能敏感的用户不友好 */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  .fade-in { opacity: 1; transform: none; }
 }
