@@ -1,7 +1,0 @@
-node_modules
-.wrangler
-.git
-.wranglerignore
-.github
-.gitignore
-README.md

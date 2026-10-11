@@ -1,0 +1,36 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base
+  title="关于 · 1971.xin"
+  description="关于罗祥和这个网站：一个收工具、写东西、放想法的安静角落。"
+>
+  <article class="prose container">
+    <header class="post-head">
+      <h1>关于</h1>
+      <div class="meta"><span>这个网站本身</span></div>
+    </header>
+    <div class="body">
+      <p>
+        我是<strong>罗祥</strong>。这个域名 <code>1971.xin</code>
+        是我在互联网上的门牌号 —— 用来收邮件、放东西、以及记录一些没有更好去处的念头。
+      </p>
+      <p>
+        网站分两块：<a href="/tools/">工具库</a>收录我真实在用的东西，
+        <a href="/articles/">文章</a>记录折腾的过程。没有恰饭，没有软文，
+        每一条都是自己试过之后留下的。
+      </p>
+      <h2>这个网站怎么做的</h2>
+      <ul>
+        <li>用 <strong>Astro</strong> 生成，纯静态，没有后端</li>
+        <li>代码放在 GitHub，每次 <code>git push</code> 自动部署</li>
+        <li>托管在 Cloudflare Pages，全球边缘节点分发</li>
+      </ul>
+      <h2>找我</h2>
+      <p>
+        最直接的方式是发邮件：<a href="mailto:luoxiang@agent.qq.com">luoxiang@agent.qq.com</a>
+      </p>
+    </div>
+  </article>
+</Base>

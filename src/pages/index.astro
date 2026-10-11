@@ -1,0 +1,62 @@
+---
+import Base from "../layouts/Base.astro";
+import { getCollection } from "astro:content";
+
+const tools = (await getCollection("tools")).sort((a, b) => a.data.order - b.data.order);
+const featured = tools.filter((t) => t.data.featured);
+
+const articles = (await getCollection("articles")).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+const recent = articles.slice(0, 4);
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric" });
+---
+
+<Base title="1971.xin · 工具、技术和数字生活">
+  <section class="hero container">
+    <p class="eyebrow">你好，我是罗祥 —</p>
+    <h1>工具、技术<br />和数字生活。</h1>
+    <p class="lede">
+      收录我真实在用的工具，记录折腾技术的过程，顺便留一点没更好去处的想法。
+    </p>
+  </section>
+
+  <section class="section container" aria-labelledby="home-tools">
+    <div class="section-head">
+      <h2 id="home-tools"><span class="dot"></span>在用的工具</h2>
+      <a class="more" href="/tools/">全部工具 →</a>
+    </div>
+    <div class="tool-grid">
+      {featured.map((tool) => (
+        <a class="tool-card" href={tool.data.url} target="_blank" rel="noopener">
+          <span class="name">{tool.data.name}<span class="arrow">↗</span></span>
+          <span class="tagline">{tool.data.tagline}</span>
+          <span class="meta"><span class="cat">{tool.data.category}</span></span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="section container" aria-labelledby="home-articles">
+    <div class="section-head">
+      <h2 id="home-articles"><span class="dot"></span>最新文章</h2>
+      <a class="more" href="/articles/">全部文章 →</a>
+    </div>
+    <div class="article-list">
+      {recent.map((post) => (
+        <a class="article-row" href={`/articles/${post.id}/`}>
+          <h3>{post.data.title}</h3>
+          <p>{post.data.description}</p>
+          <span class="meta">
+            <span>{fmt(post.data.pubDate)}</span>
+            {post.data.tags.slice(0, 2).map((tag) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </span>
+        </a>
+      ))}
+    </div>
+  </section>
+</Base>

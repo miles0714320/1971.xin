@@ -1,8 +1,8 @@
 name: Deploy 1971.xin to Cloudflare Pages
 
-# 说明：这不是 Cloudflare Pages 内置的 Git 集成（Direct Upload 项目无法启用那个），
-# 而是由我们自己调用 wrangler 把文件点名上传到现有项目 1971-xin。
-# 好处：自动部署 + 版本历史 + 分支预览，且不需要重建项目、不动 DNS。
+# 说明：本站是 Cloudflare Pages 的 Direct Upload 项目（无法用内置 Git 集成），
+# 由我们自己跑 Astro 构建，再调 wrangler 把构建产物点名上传到现有项目 1971-xin。
+# 每次 push 到 main：install → build → deploy，全程自动。
 
 on:
   push:
@@ -25,43 +25,29 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: 把资源版本号替换成提交 SHA（破浏览器缓存）
-        run: |
-          SHA="${GITHUB_SHA::8}"
-          for f in index.html 404.html; do
-            sed -i -E "s#(style\.css\?v=)[^\"']*#\1${SHA}#g; s#(script\.js\?v=)[^\"']*#\1${SHA}#g" "$f"
-          done
-          echo "--- 替换结果 ---"
-          grep -n -oE "(style\.css|script\.js)\?v=[A-Za-z0-9]+" index.html 404.html
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm # 依据 package-lock.json 提速
 
-      - name: 准备上传目录（只挑出站点文件）
+      - name: 安装依赖
+        run: npm ci
+
+      - name: 构建站点
+        run: npm run build
+
+      - name: 兜底检查
         run: |
-          # 实测 2026-10-08：wrangler pages deploy 并不读 .wranglerignore，
-          # 直接传 "." 会把 README.md、.gitignore、.github/ 一起公开到站点上
-          # （curl https://1971.xin/README.md 曾返回 200）。
-          # 因此先复制出一份干净目录再上传。
-          # `*` 不匹配以点号开头的文件，所以 .gitignore / .github / .git 天然被排除。
-          rm -rf .dist && mkdir -p .dist
-          for f in *; do
-            [ "$f" = ".dist" ] && continue
-            [ "$f" = "README.md" ] && continue
-            cp -r "$f" .dist/
-          done
-          # 兜底：万一复制失败导致目录为空，直接中止，绝不把空目录传上去顶掉线上
-          test -f .dist/index.html || { echo "!! .dist 里没有 index.html，中止部署"; exit 1; }
-          echo "--- 将上传的文件 ---"
-          ls -A .dist
+          # 防止构建异常时把残缺产物传上线顶掉正常页面
+          test -f dist/index.html || { echo "!! 缺少 dist/index.html，中止"; exit 1; }
+          test -f dist/404.html || { echo "!! 缺少 dist/404.html，中止"; exit 1; }
+          ls dist
 
       - name: 上传到 Cloudflare Pages 生产环境
         uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           # 不传 --branch：wrangler 会直接发到生产分支。
-          # 若传了 --branch=main 而 main 不是该项目的生产分支，
-          # 部署只会进 main.1971-xin.pages.dev 预览地址，线上不会变。
-          command: pages deploy .dist --project-name=1971-xin --commit-dirty=true
+          # 产物在 dist/（.gitignore 已排除），CSS/JS 文件名自带内容哈希，天然破缓存。
+          command: pages deploy dist --project-name=1971-xin --commit-dirty=true
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-
-      # token 还没配时，上面这步会失败（显示红色），属正常现象。
-      # 配好一次之后就不会再失败：仓库 Settings → Secrets and variables → Actions
-      # 新增 CLOUDFLARE_API_TOKEN，权限只需 Account → Cloudflare Pages → Edit。

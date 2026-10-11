@@ -1,62 +1,39 @@
 # 1971.xin
 
-我的个人网站。纯静态，Cloudflare Pages 托管。
+罗祥的个人网站：工具库 + 文章。用 Astro 生成，纯静态，托管在 Cloudflare Pages。
 
-## 技术栈
-
-HTML / CSS / 原生 JavaScript，无构建步骤、无框架、无依赖。
-
-## 部署方式（重要）
-
-本站的 Cloudflare Pages 项目是 **Direct Upload（直接上传）类型**，不是 Git 集成类型。
-
-**Direct Upload 项目无法在 Cloudflare 后台切换为 Git 集成**（官方限制），所以本站
-**不是**"推送即自动构建"。真正的自动部署由本仓库的 GitHub Actions 完成：
+## 结构
 
 ```
-本地改文件 → git push 到 main → GitHub Actions 调 wrangler pages deploy
-           → 上传到 Cloudflare Pages 项目 1971 → 1971.xin 上线
+src/
+├── pages/            # 路由：首页 / 工具库 / 文章 / 文章详情 / 关于 / 404
+├── layouts/          # 全局布局（顶栏、页脚、meta、深浅色主题）
+├── styles/           # 全局样式（设计 token 在这里）
+└── content/
+    ├── tools/        # 工具条目：一个 md 文件 = 一个工具
+    └── articles/     # 文章：一个 md 文件 = 一篇文章
+public/               # 原样复制到产物：图标、og 图、robots.txt、_headers
 ```
 
-工作流文件：`.github/workflows/deploy.yml`
+## 日常操作
 
-### 首次配置（只需做一次）
+**发文章**：在 `src/content/articles/` 里加一个 `.md` 文件（含 frontmatter），
+提交推送，约 2 分钟自动上线。
 
-仓库 `Settings → Secrets and variables → Actions` 新增 secret：
+**收录工具**：同理，文件放 `src/content/tools/`，`featured: true` 上首页。
 
-| 名称 | 值 |
-|---|---|
-| `CLOUDFLARE_API_TOKEN` | Cloudflare API Token，权限**仅**勾选 `Account → Cloudflare Pages → Edit` |
-
-> ⚠️ 不要使用 Global API Key，那是整个账号的权限。
-> 配好之后 `git push` 即自动上线，无需本地再跑部署脚本。
-
-### 分支规则
-
-- 推送到 `main` → 直接上线 1971.xin
-- 推送到其他分支 → 只生成预览网址，不影响线上
-- 也可以在 Actions 页面点 `workflow_dispatch` 手动发布
-
-## 文件说明
-
-| 文件 | 作用 |
-|---|---|
-| `index.html` | 页面全部内容与文字 |
-| `style.css` | 颜色、字号、间距、深浅色适配 |
-| `script.js` | 复制邮箱按钮 |
-| `404.html` | 网址打错时显示的页面 |
-| `robots.txt` | 搜索引擎抓取声明 |
-| `sitemap.xml` | 站点地图 |
-| `_headers` | 缓存策略与安全响应头 |
-| `_redirects` | 错误路径转 404 的规则 |
-
-> ⚠️ `_headers` 与 `_redirects` **必须随部署一起上传才生效**。它们已在
-> `.wranglerignore` 之外，不会被排除。
-
-## 本地预览
+## 本地命令
 
 ```bash
-npx serve .
+npm install    # 安装依赖
+npm run dev    # 本地预览（热更新）
+npm run build  # 构建到 dist/
 ```
 
-或直接双击 `index.html`（部分浏览器对本地文件有限制，建议用上面的方式）。
+## 部署
+
+GitHub Actions 自动跑：push 到 `main` → `npm ci` → `astro build` →
+`wrangler pages deploy dist` 到 Cloudflare Pages 项目 `1971-xin`。
+
+样式与脚本文件名带内容哈希（`/_astro/*.css`），配合 `_headers` 里的
+immutable 缓存策略，发布后浏览器必定拿到新版本。

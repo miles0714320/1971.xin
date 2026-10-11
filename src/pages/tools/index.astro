@@ -1,0 +1,50 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getCollection } from "astro:content";
+
+const tools = (await getCollection("tools")).sort((a, b) => a.data.order - b.data.order);
+
+// 按分类分组，保持首次出现的顺序
+const groups = new Map<string, typeof tools>();
+for (const tool of tools) {
+  const list = groups.get(tool.data.category) ?? [];
+  list.push(tool);
+  groups.set(tool.data.category, list);
+}
+---
+
+<Base
+  title="工具库 · 1971.xin"
+  description="我真实在用的工具集合：AI 与大模型、效率与自动化、开发与折腾。"
+>
+  <section class="hero container">
+    <p class="eyebrow">Tools —</p>
+    <h1>工具库</h1>
+    <p class="lede">
+      这里没有恰饭推荐，只有我真实在用、且愿意继续用的东西。
+      每一条都是自己试过之后留下的。
+    </p>
+  </section>
+
+  {[...groups.entries()].map(([category, list]) => (
+    <section class="section container" aria-labelledby={`cat-${category}`}>
+      <div class="section-head">
+        <h2 id={`cat-${category}`}><span class="dot"></span>{category}</h2>
+      </div>
+      <div class="tool-grid">
+        {list.map((tool) => (
+          <a class="tool-card" href={tool.data.url} target="_blank" rel="noopener">
+            <span class="name">{tool.data.name}<span class="arrow">↗</span></span>
+            <span class="tagline">{tool.data.tagline}</span>
+            <span class="meta">
+              <span class="cat">{tool.data.category}</span>
+              {tool.data.platform.map((p) => (
+                <span class="cat" style="color: var(--text-3); background: var(--muted);">{p}</span>
+              ))}
+            </span>
+          </a>
+        ))}
+      </div>
+    </section>
+  ))}
+</Base>
