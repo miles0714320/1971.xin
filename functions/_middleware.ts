@@ -1,12 +1,14 @@
 /// <reference types="@cloudflare/workers-types" />
 
+import { verifyJWT } from "./lib/auth";
+
 interface Env {
   DB: D1Database;
   AUTH_SECRET: string;
 }
 
 // 全局鉴权中间件：保护 /api/*，未登录一律 401
-// 放行清单：登录、登出、健康检查、首次初始化（它们自己判断状态）
+// 放行清单：登录、登出、健康检查、登录态查询、首次初始化（它们自己判断状态）
 const PUBLIC_ROUTES = ["/api/health", "/api/login", "/api/logout", "/api/me", "/api/setup"];
 
 export const onRequest: PagesFunction<Env> = async (context) => {
@@ -19,7 +21,6 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   const token = readSession(context.request);
   if (!token) return jsonError("unauthorized", 401);
 
-  const { verifyJWT } = await import("../lib/auth");
   const payload = await verifyJWT(token, context.env.AUTH_SECRET || "");
   if (!payload) return jsonError("unauthorized", 401);
 
