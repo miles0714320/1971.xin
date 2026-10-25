@@ -49,14 +49,14 @@ const current = (href: string) =>
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#ffffff" />
 
     <script is:inline>
-      // 默认暗色（本站视觉以暗色为主），localStorage 可覆盖为亮色
+      // 默认亮色（用户 2026-10-25 明确要求：打开先看到"正常模式"）。
+      // 用户手动切到暗色后，localStorage 记住该选择，后续访问沿用。
       (function () {
         var saved = localStorage.getItem("theme");
-        document.documentElement.dataset.theme = saved || "dark";
+        document.documentElement.dataset.theme = saved === "dark" ? "dark" : "light";
       })();
     </script>
   </head>
@@ -72,7 +72,7 @@ const current = (href: string) =>
           {nav.map((item) => (
             <a class="nav-link" href={item.href} aria-current={current(item.href)}>{item.label}</a>
           ))}
-          <button class="theme-toggle" type="button" aria-label="切换深浅色主题" title="切换深浅色主题">
+          <button class="theme-toggle" type="button" aria-label="切换深浅色主题" title="切换深浅色主题（当前：亮色，点击转暗色）" id="theme-btn">
             <svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
             </svg>
@@ -98,12 +98,22 @@ const current = (href: string) =>
 
     <script>
       // 主题切换
-      document.querySelector(".theme-toggle")?.addEventListener("click", () => {
+      const themeBtn = document.querySelector(".theme-toggle");
+      function syncThemeLabel() {
+        if (!themeBtn) return;
+        const isDark = document.documentElement.dataset.theme === "dark";
+        themeBtn.title = isDark
+          ? "切换深浅色主题（当前：暗色，点击转亮色）"
+          : "切换深浅色主题（当前：亮色，点击转暗色）";
+      }
+      themeBtn?.addEventListener("click", () => {
         const root = document.documentElement;
         const next = root.dataset.theme === "dark" ? "light" : "dark";
         root.dataset.theme = next;
         localStorage.setItem("theme", next);
+        syncThemeLabel();
       });
+      syncThemeLabel();
 
       // 滚动渐显：给带 .rv 的元素加 .in，用 data-d 控制错峰延迟。
       // threshold 用 0 而非 0.12：元素刚进入视口就触发，避免高元素迟迟不显示。
@@ -131,9 +141,10 @@ const current = (href: string) =>
     </script>
 
     <style>
+      /* 图标表示"点击后会切到的模式"：亮色时显示月亮，暗色时显示太阳 */
       .theme-toggle .icon-sun { display: none; }
-      [data-theme="light"] .theme-toggle .icon-sun { display: block; }
-      [data-theme="light"] .theme-toggle .icon-moon { display: none; }
+      [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+      [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
     </style>
   </body>
 </html>
