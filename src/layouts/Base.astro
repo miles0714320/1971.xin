@@ -57,6 +57,11 @@ const current = (href: string) =>
       (function () {
         var saved = localStorage.getItem("theme");
         document.documentElement.dataset.theme = saved === "dark" ? "dark" : "light";
+        // 渐进增强：只有真正支持 IntersectionObserver 才启用滚动渐显的初始隐藏，
+        // 否则内容保持默认可见（JS 禁用、老浏览器、打印都不会得到空白页）。
+        if ("IntersectionObserver" in window) {
+          document.documentElement.classList.add("js-anim");
+        }
       })();
     </script>
   </head>

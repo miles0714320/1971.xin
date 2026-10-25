@@ -1,11 +1,43 @@
 /* ================================================================
    1971.xin · 设计系统 v3
-   视觉语言移植自 huanxi.ai：暗色近黑画布 + 分层表面 + 发丝边框
-   + 蓝色强调 + Inter/PingFang + mono 点缀 + 大留白
-   默认暗色；保留亮色备选（顶部按钮切换，localStorage 持久化）
+   视觉语言移植自 huanxi.ai：分层表面 + 发丝边框 + 蓝色强调
+   + Inter/PingFang + mono 点缀 + 大留白
+
+   ⚠️ 主题架构：:root 放「亮色」作为默认值——即使 JS 失效/被禁用，
+   页面也是亮色正常模式（用户 2026-10-25 明确要求）。
+   暗色由 [data-theme="dark"] 覆盖，只有用户主动切换才启用。
    ================================================================ */
 
 :root {
+  --canvas: #ffffff;
+  --s1: #fafafa;
+  --s2: #f5f5f5;
+  --s3: #f0f0f0;
+  --s4: #ebebeb;
+
+  --hair: rgba(0, 0, 0, 0.08);
+  --hair-strong: rgba(0, 0, 0, 0.14);
+  --hair-3: rgba(0, 0, 0, 0.2);
+
+  --ink: #0a0a0a;
+  --ink-muted: rgba(10, 10, 10, 0.78);
+  --ink-subtle: rgba(10, 10, 10, 0.62);
+  --ink-3: rgba(10, 10, 10, 0.6);
+
+  /* 亮底上 #4D8DFF 对比度不足，换深蓝（#1f6feb 在 s1 上 4.44:1，仍差一点） */
+  --blue: #1a66e0;
+  --blue-lit: #4d8dff;
+  --blue-soft: rgba(31, 111, 235, 0.08);
+  --blue-glow: rgba(31, 111, 235, 0.18);
+
+  --inv: #0a0a0a;
+  --inv-ink: #ffffff;
+
+  --shadow: 0 1px 2px rgba(10, 10, 10, 0.04), 0 16px 40px -16px rgba(10, 10, 10, 0.12);
+}
+
+/* 暗色：仅用户主动切换时覆盖默认亮色。必须排在 :root 之后 */
+[data-theme="dark"] {
   /* 画布与分层表面 */
   --canvas: #0a0a0a;
   --s1: #111112;
@@ -53,35 +85,6 @@
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 16px 40px -16px rgba(0, 0, 0, 0.6);
 }
 
-/* 亮色备选：与暗色共用同一套结构名，仅换 token */
-[data-theme="light"] {
-  --canvas: #ffffff;
-  --s1: #fafafa;
-  --s2: #f5f5f5;
-  --s3: #f0f0f0;
-  --s4: #ebebeb;
-
-  --hair: rgba(0, 0, 0, 0.08);
-  --hair-strong: rgba(0, 0, 0, 0.14);
-  --hair-3: rgba(0, 0, 0, 0.2);
-
-  --ink: #0a0a0a;
-  --ink-muted: rgba(10, 10, 10, 0.78);
-  --ink-subtle: rgba(10, 10, 10, 0.62);
-  --ink-3: rgba(10, 10, 10, 0.6);
-
-  /* 亮底上 #4D8DFF 对比度不足，换深蓝（#1f6feb 在 s1 上 4.44:1，仍差一点） */
-  --blue: #1a66e0;
-  --blue-lit: #4d8dff;
-  --blue-soft: rgba(31, 111, 235, 0.08);
-  --blue-glow: rgba(31, 111, 235, 0.18);
-
-  --inv: #0a0a0a;
-  --inv-ink: #ffffff;
-
-  --shadow: 0 1px 2px rgba(10, 10, 10, 0.04), 0 16px 40px -16px rgba(10, 10, 10, 0.12);
-}
-
 /* ── Reset ─────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -124,7 +127,10 @@ a:hover { color: var(--blue-lit); }
   position: sticky;
   top: 0;
   z-index: 50;
-  background: color-mix(in srgb, var(--canvas) 82%, transparent);
+  /* 渐进增强：不支持 color-mix 的旧 Safari 退回不透明画布色，不会变透明 */
+  background: var(--canvas);
+  background: color-mix(in srgb, var(--canvas) 88%, transparent);
+  -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--hair);
 }
@@ -194,7 +200,7 @@ a:hover { color: var(--blue-lit); }
 .theme-toggle:hover { border-color: var(--hair-3); color: var(--ink); }
 
 /* ── Hero（双栏：左文案 / 右演示）───────── */
-.hero { padding: 104px 0 80px; }
+.hero { padding-top: 104px; padding-bottom: 80px; }
 
 .hero-grid {
   display: grid;
@@ -355,7 +361,7 @@ a:hover { color: var(--blue-lit); }
 @keyframes blink { 50% { opacity: 0; } }
 
 /* ── 区块 ─────────────────────────────── */
-.section { padding: 64px 0; }
+.section { padding-top: 64px; padding-bottom: 64px; }
 .section + .section { border-top: 1px solid var(--hair); }
 
 .sec-head { margin-bottom: 36px; }
@@ -585,7 +591,7 @@ a:hover { color: var(--blue-lit); }
 .site-foot .foot-mono { font-family: var(--mono); font-size: 0.8rem; }
 
 /* ── 404 ──────────────────────────────── */
-.p404 { text-align: center; padding: 140px 0; }
+.p404 { text-align: center; padding-top: 140px; padding-bottom: 140px; }
 .p404 .code {
   font-family: var(--mono);
   font-size: 0.85rem;
@@ -595,31 +601,107 @@ a:hover { color: var(--blue-lit); }
 .p404 h1 { font-size: 2.1rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 14px; }
 .p404 p { color: var(--ink-subtle); margin-bottom: 28px; }
 
-/* ── 滚动渐显 ─────────────────────────── */
-/* 参数刻意保守：内容站不该让人等。
-   0.45s 过渡 + 最多 220ms 错峰，元素一进视口即触发（threshold 0）。 */
-.rv {
+/* ── 滚动渐显（渐进增强）────────────────
+   默认「可见」，只有 <html class="js-anim">（JS 与 IntersectionObserver 都可用）
+   时才隐藏等待进入视口。这样 JS 失效、打印、爬虫抓取都不会看到空白。 */
+.rv { opacity: 1; transform: none; }
+
+html.js-anim .rv {
   opacity: 0;
   transform: translateY(12px);
   transition: opacity 0.45s var(--ease), transform 0.45s var(--ease);
   transition-delay: calc(var(--d, 0) * 55ms);
 }
-.rv.in { opacity: 1; transform: none; }
+html.js-anim .rv.in { opacity: 1; transform: none; }
+
+@media print {
+  .rv, html.js-anim .rv {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
 
 /* ── 响应式 ───────────────────────────── */
 @media (max-width: 900px) {
-  .hero { padding: 64px 0 56px; }
-  .hero-grid { grid-template-columns: 1fr; gap: 44px; }
-  .section { padding: 48px 0; }
+  .hero { padding-top: 56px; padding-bottom: 52px; }
+  .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  .section { padding-top: 48px; padding-bottom: 48px; }
   .cta { padding: 40px 24px; }
 }
 
+/* 手机端：导航是最大痛点——4 个中文链接在 390px 下会被压成竖排两行。
+   处理思路：logo 只留图标、链接禁止换行、触控区不小于 40px、留白收紧。 */
 @media (max-width: 640px) {
-  .site-head .wrap { gap: 8px; height: 58px; }
-  .nav-link { padding: 6px 9px; font-size: 0.85rem; }
-  .logo { font-size: 0.88rem; }
-  .tool-grid { grid-template-columns: 1fr; }
-  .article-row:hover { padding-left: 6px; }
+  .wrap { padding: 0 16px; }
+
+  .site-head .wrap { gap: 4px; height: 56px; }
+
+  .logo { gap: 0; padding: 8px 4px; min-height: 40px; }
+  .logo span:last-child { display: none; } /* 小屏只留图标 */
+  .logo .glyph { width: 24px; height: 24px; font-size: 0.72rem; }
+
+  .nav-link {
+    padding: 10px 7px;
+    font-size: 0.82rem;
+    white-space: nowrap;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .theme-toggle {
+    width: 40px;
+    height: 40px;
+    margin-left: 2px;
+    flex-shrink: 0;
+  }
+
+  .hero { padding-top: 36px; padding-bottom: 40px; }
+  .hero h1 { font-size: 2.05rem; letter-spacing: -0.02em; }
+  .hero-sub { font-size: 1rem; }
+  .eyebrow { font-size: 0.72rem; padding: 4px 10px; margin-bottom: 18px; }
+  .hero-cta { gap: 10px; margin: 26px 0 20px; }
+  .btn-main, .btn-ghost { padding: 12px 18px; font-size: 0.9rem; }
+  .hero-trust { font-size: 0.72rem; gap: 6px; line-height: 1.8; }
+
+  .demo-body { padding: 16px; font-size: 0.76rem; line-height: 1.85; }
+  .demo-title { font-size: 0.7rem; }
+
+  .section { padding-top: 40px; padding-bottom: 40px; }
+  .sec-head { margin-bottom: 24px; }
+  .sec-head h2 { font-size: 1.3rem; }
+  .sec-sub { font-size: 0.94rem; }
+  .sec-more {
+    padding: 10px 0;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .tool-grid { grid-template-columns: 1fr; gap: 12px; }
+  .tool-card { padding: 18px; }
+  .tool-card:hover { transform: none; } /* 触屏无真 hover，避免位移残留 */
+
+  .article-row { padding: 18px 4px; }
+  .article-row:hover { padding-left: 4px; }
+  .article-row h3 { font-size: 1rem; }
+  .article-row p { font-size: 0.9rem; }
+  .article-row .meta { flex-wrap: wrap; gap: 8px; }
+
+  .prose .post-head { padding-top: 44px; padding-bottom: 28px; }
+  .prose .body { padding-bottom: 56px; }
+
+  .cta { padding: 32px 20px; margin-bottom: 56px; }
+
+  /* iOS 刘海屏底部安全区 */
+  .site-foot { padding: 24px 0 calc(32px + env(safe-area-inset-bottom)); }
+}
+
+/* 超小屏（iPhone SE / 老安卓 360）再收一档 */
+@media (max-width: 380px) {
+  .nav-link { padding: 10px 5px; font-size: 0.78rem; }
+  .hero h1 { font-size: 1.9rem; }
+  .hero-trust { font-size: 0.68rem; }
 }
 
 /* ── 减少动态效果偏好 ──────────────────── */
