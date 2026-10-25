@@ -14,24 +14,49 @@ const fmt = (d: Date) =>
   title="文章 · 1971.xin"
   description="折腾记录与想法：AI、工具、部署、以及数字生活的边角料。"
 >
-  <section class="hero container">
-    <p class="eyebrow">Writing —</p>
-    <h1>文章</h1>
-    <p class="lede">
-      折腾过程的完整记录，踩过的坑、跑通的方案。写下来，主要是为了下次不用重想一遍。
-    </p>
+  <section class="hero wrap">
+    <div class="hero-grid">
+      <div class="hero-l">
+        <p class="eyebrow rv"><span class="pulse"></span>WRITING · {articles.length} 篇</p>
+        <h1 class="rv" data-d="1">文章</h1>
+        <p class="hero-sub rv" data-d="2">
+          折腾过程的<b>完整记录</b>：踩过的坑、跑通的方案。
+        </p>
+        <p class="hero-sub rv" data-d="2">
+          写下来，主要是为了下次不用重想一遍。
+        </p>
+      </div>
+      <div class="hero-r rv" data-d="2">
+        <div class="demo">
+          <div class="demo-bar">
+            <span class="demo-dot"></span>
+            <span class="demo-dot"></span>
+            <span class="demo-dot"></span>
+            <span class="demo-title">~/articles — ls</span>
+          </div>
+          <div class="demo-body">
+            {articles.slice(0, 5).map((post) => (
+              <span class="ln"><span class="c">{post.id}.md</span></span>
+            ))}
+            <span class="ln"></span>
+            <span class="ln"><span class="p">$</span> <span class="s">最新一篇</span></span>
+            <span class="ln"><span class="m">{articles[0]?.data.title ?? "暂无"}</span> <span class="cur"></span></span>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <section class="section container">
+  <section class="section wrap">
     <div class="article-list">
-      {articles.map((post) => (
-        <a class="article-row" href={`/articles/${post.id}/`}>
+      {articles.map((post, i) => (
+        <a class="article-row rv" data-d={String(i)} href={`/articles/${post.id}/`}>
           <h3>{post.data.title}</h3>
           <p>{post.data.description}</p>
           <span class="meta">
             <span>{fmt(post.data.pubDate)}</span>
             {post.data.tags.map((tag) => (
-              <span class="tag">{tag}</span>
+              <span class="chip">{tag}</span>
             ))}
           </span>
         </a>

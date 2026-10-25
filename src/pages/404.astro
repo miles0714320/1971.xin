@@ -3,9 +3,16 @@ import Base from "../layouts/Base.astro";
 ---
 
 <Base title="404 · 1971.xin" description="页面走丢了。">
-  <div class="p404 container">
+  <div class="p404 wrap">
+    <p class="code">HTTP 404 · NOT FOUND</p>
     <h1>这里没有东西。</h1>
     <p>页面走丢了。也许它从来就不存在，也许只是换了个地方。</p>
-    <p><a href="/">← 回到首页</a></p>
+    <div class="hero-cta" style="justify-content:center">
+      <a class="btn-main" href="/">
+        <span>回到首页</span>
+        <span aria-hidden="true">→</span>
+      </a>
+      <a class="btn-ghost" href="/tools/">去工具库</a>
+    </div>
   </div>
 </Base>

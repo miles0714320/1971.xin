@@ -15,48 +15,115 @@ const fmt = (d: Date) =>
 ---
 
 <Base title="1971.xin · 工具、技术和数字生活">
-  <section class="hero container">
-    <p class="eyebrow">你好，我是罗祥 —</p>
-    <h1>工具、技术<br />和数字生活。</h1>
-    <p class="lede">
-      收录我真实在用的工具，记录折腾技术的过程，顺便留一点没更好去处的想法。
-    </p>
+  <!-- ── Hero：左文案 / 右终端演示 ── -->
+  <section class="hero wrap">
+    <div class="hero-grid">
+      <div class="hero-l">
+        <p class="eyebrow rv" data-d="0"><span class="pulse"></span>ONLINE · 罗祥的个人站</p>
+        <h1 class="rv" data-d="1">工具、技术<br />和<em>数字生活</em>。</h1>
+        <p class="hero-sub rv" data-d="2">
+          收录我<b>真实在用</b>的工具，记录折腾技术的过程，
+          顺手留一点没更好去处的想法。
+        </p>
+        <p class="hero-sub rv" data-d="2">
+          没有恰饭，没有软文 —— 每一条都是自己试过之后留下的。
+          <b>够用就好。</b>
+        </p>
+        <div class="hero-cta rv" data-d="3">
+          <a class="btn-main" href="/tools/">
+            <span>浏览工具库</span>
+            <span aria-hidden="true">→</span>
+          </a>
+          <a class="btn-ghost" href="/articles/">读文章</a>
+        </div>
+        <p class="hero-trust rv" data-d="4">
+          <i>Astro 构建</i><em>·</em><i>Cloudflare 托管</i><em>·</em><i>git push 即上线</i><em>·</em><i>无后端零成本</i>
+        </p>
+      </div>
+
+      <div class="hero-r rv" data-d="2">
+        <div class="demo">
+          <div class="demo-bar">
+            <span class="demo-dot"></span>
+            <span class="demo-dot"></span>
+            <span class="demo-dot"></span>
+            <span class="demo-title">~/1971.xin — status</span>
+          </div>
+          <div class="demo-body">
+            <span class="ln"><span class="p">$</span> <span class="s">1971.xin --status</span></span>
+            <span class="ln"><span class="c">✓</span> <span class="s">站点</span>      <span class="m">在线</span></span>
+            <span class="ln"><span class="c">✓</span> <span class="s">工具库</span>    <span class="m">{tools.length} 个收录</span></span>
+            <span class="ln"><span class="c">✓</span> <span class="s">文章</span>      <span class="m">{articles.length} 篇</span></span>
+            <span class="ln"><span class="c">✓</span> <span class="s">部署</span>      <span class="m">push → 40s</span></span>
+            <span class="ln"><span class="c">✓</span> <span class="s">成本</span>      <span class="m">¥0 / 月</span></span>
+            <span class="ln"></span>
+            <span class="ln"><span class="p">$</span> <span class="s">echo "够用就好"</span></span>
+            <span class="ln"><span class="m">够用就好</span> <span class="cur"></span></span>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <section class="section container" aria-labelledby="home-tools">
-    <div class="section-head">
-      <h2 id="home-tools"><span class="dot"></span>在用的工具</h2>
-      <a class="more" href="/tools/">全部工具 →</a>
+  <!-- ── 精选工具 ── -->
+  <section class="section wrap" aria-labelledby="home-tools">
+    <div class="sec-head-row">
+      <div class="sec-head rv">
+        <p class="sec-kicker">TOOLS</p>
+        <h2 id="home-tools">在用的工具</h2>
+        <p class="sec-sub">自己试过、愿意继续用的东西。点卡片直达官网。</p>
+      </div>
+      <a class="sec-more rv" data-d="1" href="/tools/">全部 {tools.length} 个 →</a>
     </div>
     <div class="tool-grid">
-      {featured.map((tool) => (
-        <a class="tool-card" href={tool.data.url} target="_blank" rel="noopener">
-          <span class="name">{tool.data.name}<span class="arrow">↗</span></span>
+      {featured.map((tool, i) => (
+        <a class="tool-card rv" data-d={String(i)} href={tool.data.url} target="_blank" rel="noopener">
+          <span class="name">{tool.data.name}<span class="arrow" aria-hidden="true">↗</span></span>
           <span class="tagline">{tool.data.tagline}</span>
-          <span class="meta"><span class="cat">{tool.data.category}</span></span>
+          <span class="meta"><span class="chip">{tool.data.category}</span></span>
         </a>
       ))}
     </div>
   </section>
 
-  <section class="section container" aria-labelledby="home-articles">
-    <div class="section-head">
-      <h2 id="home-articles"><span class="dot"></span>最新文章</h2>
-      <a class="more" href="/articles/">全部文章 →</a>
+  <!-- ── 最新文章 ── -->
+  <section class="section wrap" aria-labelledby="home-articles">
+    <div class="sec-head-row">
+      <div class="sec-head rv">
+        <p class="sec-kicker">WRITING</p>
+        <h2 id="home-articles">最新文章</h2>
+        <p class="sec-sub">踩过的坑、跑通的方案。写下来，主要是为了下次不用重想一遍。</p>
+      </div>
+      <a class="sec-more rv" data-d="1" href="/articles/">全部 {articles.length} 篇 →</a>
     </div>
     <div class="article-list">
-      {recent.map((post) => (
-        <a class="article-row" href={`/articles/${post.id}/`}>
+      {recent.map((post, i) => (
+        <a class="article-row rv" data-d={String(i)} href={`/articles/${post.id}/`}>
           <h3>{post.data.title}</h3>
           <p>{post.data.description}</p>
           <span class="meta">
             <span>{fmt(post.data.pubDate)}</span>
             {post.data.tags.slice(0, 2).map((tag) => (
-              <span class="tag">{tag}</span>
+              <span class="chip">{tag}</span>
             ))}
           </span>
         </a>
       ))}
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <section class="wrap">
+    <div class="cta rv">
+      <h2>想找个安静角落聊聊工具和技术？</h2>
+      <p>这个域名是我在互联网上的门牌号 —— 收邮件、放东西、记录念头。嫌邮件太重，也可以先从工具库翻起。</p>
+      <div class="hero-cta">
+        <a class="btn-main" href="mailto:luoxiang@agent.qq.com">
+          <span>发封邮件</span>
+          <span aria-hidden="true">→</span>
+        </a>
+        <a class="btn-ghost" href="/about/">关于我</a>
+      </div>
     </div>
   </section>
 </Base>
