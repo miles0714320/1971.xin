@@ -18,11 +18,12 @@
   --hair-strong: rgba(255, 255, 255, 0.14);
   --hair-3: rgba(255, 255, 255, 0.2);
 
-  /* 四级文字 */
+  /* 四级文字。注意：huanxi.ai 原站 --ink-3 用 0.34 白（实测仅约 2.8:1，不达
+     WCAG AA）。本站承载的是时间戳、页脚等真实信息，故把最底两级提亮到 4.5:1 以上。 */
   --ink: #ffffff;
   --ink-muted: rgba(255, 255, 255, 0.8);
   --ink-subtle: rgba(255, 255, 255, 0.5);
-  --ink-3: rgba(255, 255, 255, 0.34);
+  --ink-3: rgba(255, 255, 255, 0.46);
 
   /* 强调色 */
   --blue: #4d8dff;
@@ -65,12 +66,12 @@
   --hair-3: rgba(0, 0, 0, 0.2);
 
   --ink: #0a0a0a;
-  --ink-muted: rgba(10, 10, 10, 0.72);
-  --ink-subtle: rgba(10, 10, 10, 0.5);
-  --ink-3: rgba(10, 10, 10, 0.34);
+  --ink-muted: rgba(10, 10, 10, 0.78);
+  --ink-subtle: rgba(10, 10, 10, 0.62);
+  --ink-3: rgba(10, 10, 10, 0.6);
 
-  /* 亮底上 #4D8DFF 对比度不足，换深蓝 */
-  --blue: #1f6feb;
+  /* 亮底上 #4D8DFF 对比度不足，换深蓝（#1f6feb 在 s1 上 4.44:1，仍差一点） */
+  --blue: #1a66e0;
   --blue-lit: #4d8dff;
   --blue-soft: rgba(31, 111, 235, 0.08);
   --blue-glow: rgba(31, 111, 235, 0.18);
@@ -155,7 +156,7 @@ a:hover { color: var(--blue-lit); }
   place-items: center;
   font-size: 0.7rem;
   font-weight: 600;
-  color: #fff;
+  color: var(--inv-ink);
   flex-shrink: 0;
 }
 
@@ -251,24 +252,25 @@ a:hover { color: var(--blue-lit); }
   margin: 32px 0 24px;
 }
 
-/* 按钮：主 + 幽灵 */
+/* 按钮：主 + 幽灵。
+   文字用 --inv-ink 而非纯白：暗色下是"黑字亮蓝底"（6.6:1），
+   亮色下是"白字深蓝底"（5.2:1）—— 白字配 #4d8dff 只有 3.2:1，不达标。
+   hover 刻意不变底色：变浅会再拉低一档对比度。 */
 .btn-main {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   background: var(--blue);
-  color: #fff;
+  color: var(--inv-ink);
   font-weight: 500;
   font-size: 0.95rem;
   padding: 11px 22px;
   border-radius: var(--r-md);
   border: 1px solid transparent;
-  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease),
-    background 0.2s var(--ease);
+  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
 }
 .btn-main:hover {
-  color: #fff;
-  background: var(--blue-lit);
+  color: var(--inv-ink);
   transform: translateY(-1px);
   box-shadow: 0 8px 24px -8px var(--blue-glow);
 }
