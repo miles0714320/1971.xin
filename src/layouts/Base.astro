@@ -105,7 +105,8 @@ const current = (href: string) =>
         localStorage.setItem("theme", next);
       });
 
-      // 滚动渐显：给带 .rv 的元素加 .in，用 data-d 控制错峰延迟
+      // 滚动渐显：给带 .rv 的元素加 .in，用 data-d 控制错峰延迟。
+      // threshold 用 0 而非 0.12：元素刚进入视口就触发，避免高元素迟迟不显示。
       const items = document.querySelectorAll(".rv");
       if ("IntersectionObserver" in window && items.length > 0) {
         const io = new IntersectionObserver(
@@ -117,7 +118,7 @@ const current = (href: string) =>
               }
             }
           },
-          { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+          { threshold: 0, rootMargin: "0px 0px -4% 0px" }
         );
         items.forEach((el) => {
           const d = el.getAttribute("data-d");
