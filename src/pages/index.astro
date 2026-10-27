@@ -1,7 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
 import { getCollection } from "astro:content";
-import { coverGradient, coverGlyph } from "../utils/cover";
 
 const tools = (await getCollection("tools")).sort((a, b) => a.data.order - b.data.order);
 const featured = tools.filter((t) => t.data.featured);
@@ -9,7 +8,7 @@ const featured = tools.filter((t) => t.data.featured);
 const articles = (await getCollection("articles")).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
-const recent = articles.slice(0, 6);
+const recent = articles.slice(0, 4);
 
 const fmt = (d: Date) =>
   d.toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric" });
@@ -87,33 +86,27 @@ const fmt = (d: Date) =>
     </div>
   </section>
 
-  <!-- ── 最新文章（封面卡 + 内容流）── -->
+  <!-- ── 最新文章 ── -->
   <section class="section wrap" aria-labelledby="home-articles">
     <div class="sec-head-row">
       <div class="sec-head rv">
         <p class="sec-kicker">WRITING</p>
-        <h2 id="home-articles">最近在写</h2>
+        <h2 id="home-articles">最新文章</h2>
         <p class="sec-sub">踩过的坑、跑通的方案。写下来，主要是为了下次不用重想一遍。</p>
       </div>
       <a class="sec-more rv" data-d="1" href="/articles/">全部 {articles.length} 篇 →</a>
     </div>
-    <div class="cover-grid">
+    <div class="article-list">
       {recent.map((post, i) => (
-        <a class="cover-card rv" data-d={String(i)} href={`/articles/${post.id}/`}>
-          <div class="cover" style={`background:${coverGradient(post.id)}`}>
-            <span class="cover-glyph">{coverGlyph(post.data.title)}</span>
-            <span class="cover-cat">ARTICLE</span>
-          </div>
-          <div class="cc-body">
-            <h3>{post.data.title}</h3>
-            <p>{post.data.description}</p>
-            <span class="meta">
-              <span>{fmt(post.data.pubDate)}</span>
-              {post.data.tags.slice(0, 2).map((tag) => (
-                <span class="chip">{tag}</span>
-              ))}
-            </span>
-          </div>
+        <a class="article-row rv" data-d={String(i)} href={`/articles/${post.id}/`}>
+          <h3>{post.data.title}</h3>
+          <p>{post.data.description}</p>
+          <span class="meta">
+            <span>{fmt(post.data.pubDate)}</span>
+            {post.data.tags.slice(0, 2).map((tag) => (
+              <span class="chip">{tag}</span>
+            ))}
+          </span>
         </a>
       ))}
     </div>

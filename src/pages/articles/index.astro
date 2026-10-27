@@ -1,7 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
 import { getCollection } from "astro:content";
-import { coverGradient, coverGlyph } from "../../utils/cover";
 
 const articles = (await getCollection("articles")).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
@@ -49,23 +48,17 @@ const fmt = (d: Date) =>
   </section>
 
   <section class="section wrap">
-    <div class="cover-grid">
+    <div class="article-list">
       {articles.map((post, i) => (
-        <a class="cover-card rv" data-d={String(i)} href={`/articles/${post.id}/`}>
-          <div class="cover" style={`background:${coverGradient(post.id)}`}>
-            <span class="cover-glyph">{coverGlyph(post.data.title)}</span>
-            <span class="cover-cat">ARTICLE</span>
-          </div>
-          <div class="cc-body">
-            <h3>{post.data.title}</h3>
-            <p>{post.data.description}</p>
-            <span class="meta">
-              <span>{fmt(post.data.pubDate)}</span>
-              {post.data.tags.map((tag) => (
-                <span class="chip">{tag}</span>
-              ))}
-            </span>
-          </div>
+        <a class="article-row rv" data-d={String(i)} href={`/articles/${post.id}/`}>
+          <h3>{post.data.title}</h3>
+          <p>{post.data.description}</p>
+          <span class="meta">
+            <span>{fmt(post.data.pubDate)}</span>
+            {post.data.tags.map((tag) => (
+              <span class="chip">{tag}</span>
+            ))}
+          </span>
         </a>
       ))}
     </div>
