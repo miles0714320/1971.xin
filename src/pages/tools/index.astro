@@ -51,6 +51,16 @@ for (const tool of tools) {
     </div>
   </section>
 
+  {tools.length === 0 && (
+    <section class="section wrap">
+      <div class="sec-head">
+        <p class="sec-kicker">SOON</p>
+        <h2>工具库正在整理</h2>
+        <p class="sec-sub">这一栏先留空，后续会陆续放出我真实在用的工具。</p>
+      </div>
+    </section>
+  )}
+
   {[...groups.entries()].map(([category, list]) => (
     <section class="section wrap" aria-labelledby={`cat-${category}`}>
       <div class="sec-head rv">

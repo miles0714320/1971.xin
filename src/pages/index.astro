@@ -65,26 +65,28 @@ const fmt = (d: Date) =>
     </div>
   </section>
 
-  <!-- ── 精选工具 ── -->
-  <section class="section wrap" aria-labelledby="home-tools">
-    <div class="sec-head-row">
-      <div class="sec-head rv">
-        <p class="sec-kicker">TOOLS</p>
-        <h2 id="home-tools">在用的工具</h2>
-        <p class="sec-sub">自己试过、愿意继续用的东西。点卡片直达官网。</p>
+  <!-- ── 精选工具（无内容时不渲染，避免空区块）── -->
+  {featured.length > 0 && (
+    <section class="section wrap" aria-labelledby="home-tools">
+      <div class="sec-head-row">
+        <div class="sec-head rv">
+          <p class="sec-kicker">TOOLS</p>
+          <h2 id="home-tools">在用的工具</h2>
+          <p class="sec-sub">自己试过、愿意继续用的东西。点卡片直达官网。</p>
+        </div>
+        <a class="sec-more rv" data-d="1" href="/tools/">全部 {tools.length} 个 →</a>
       </div>
-      <a class="sec-more rv" data-d="1" href="/tools/">全部 {tools.length} 个 →</a>
-    </div>
-    <div class="tool-grid">
-      {featured.map((tool, i) => (
-        <a class="tool-card rv" data-d={String(i)} href={tool.data.url} target="_blank" rel="noopener">
-          <span class="name">{tool.data.name}<span class="arrow" aria-hidden="true">↗</span></span>
-          <span class="tagline">{tool.data.tagline}</span>
-          <span class="meta"><span class="chip">{tool.data.category}</span></span>
-        </a>
-      ))}
-    </div>
-  </section>
+      <div class="tool-grid">
+        {featured.map((tool, i) => (
+          <a class="tool-card rv" data-d={String(i)} href={tool.data.url} target="_blank" rel="noopener">
+            <span class="name">{tool.data.name}<span class="arrow" aria-hidden="true">↗</span></span>
+            <span class="tagline">{tool.data.tagline}</span>
+            <span class="meta"><span class="chip">{tool.data.category}</span></span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
 
   <!-- ── 最新文章 ── -->
   <section class="section wrap" aria-labelledby="home-articles">
