@@ -559,6 +559,36 @@ a:hover { color: var(--blue-lit); }
 .prose a:hover { text-decoration-color: var(--blue); }
 .prose hr { border: none; border-top: 1px solid var(--hair); margin: 2.6em 0; }
 
+/* 表格：markdown 原生 <table> 默认无样式，逐步补全（发丝边框 + 表头底色） */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.4em 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  font-variant-numeric: tabular-nums;
+}
+.prose thead th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--s2);
+  border-bottom: 1px solid var(--hair-strong);
+  white-space: nowrap;
+}
+.prose th,
+.prose td {
+  padding: 9px 13px;
+  border-bottom: 1px solid var(--hair);
+  vertical-align: top;
+  text-align: left;
+}
+.prose tbody td { color: var(--ink-muted); }
+.prose tbody tr:last-child td { border-bottom: none; }
+.prose tbody tr:hover { background: var(--s1); }
+.prose td code,
+.prose th code { white-space: nowrap; }
+
 /* ── CTA 区 ───────────────────────────── */
 .cta {
   margin: 40px 0 80px;
@@ -693,6 +723,11 @@ html.js-anim .rv.in { opacity: 1; transform: none; }
 
   .prose .post-head { padding-top: 44px; padding-bottom: 28px; }
   .prose .body { padding-bottom: 56px; }
+
+  /* 窄屏表格：缩小字号与内边距，避免挤压破版 */
+  .prose table { font-size: 0.78rem; }
+  .prose th, .prose td { padding: 6px 8px; }
+  .prose td code, .prose th code { white-space: normal; }
 
   .cta { padding: 32px 20px; margin-bottom: 56px; }
 

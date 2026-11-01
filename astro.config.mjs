@@ -10,4 +10,10 @@ export default defineConfig({
     // 产物在 dist/，与 wrangler pages deploy dist 对齐
     format: "directory",
   },
+  markdown: {
+    // 关闭 Shiki 语法高亮：其默认 github-dark 会给 <pre> 打内联深色底，
+    // 与本站亮色主题的深色文字叠加后对比度极低（深底深字）。
+    // 关闭后代码块完全走 global.css 的 .prose pre / code 令牌，亮暗主题各自正确。
+    syntaxHighlight: false,
+  },
 });
