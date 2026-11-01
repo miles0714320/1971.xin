@@ -187,18 +187,6 @@ a:hover { color: var(--blue-lit); }
   letter-spacing: -0.01em;
 }
 .logo:hover { color: var(--ink); }
-.logo .glyph {
-  width: 22px;
-  height: 22px;
-  border-radius: var(--r-sm);
-  background: var(--blue);
-  display: grid;
-  place-items: center;
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--inv-ink);
-  flex-shrink: 0;
-}
 
 .site-nav {
   display: flex;
@@ -738,9 +726,7 @@ html.js-anim .rv.in { opacity: 1; transform: none; }
 
   .site-head .wrap { gap: 4px; height: 56px; }
 
-  .logo { gap: 0; padding: 8px 4px; min-height: 40px; }
-  .logo span:last-child { display: none; } /* 小屏只留图标 */
-  .logo .glyph { width: 24px; height: 24px; font-size: 0.72rem; }
+  .logo { gap: 0; padding: 8px 4px; min-height: 40px; font-size: 0.85rem; }
 
   .nav-link {
     padding: 10px 7px;
