@@ -599,6 +599,7 @@ a:hover { color: var(--blue-lit); }
   border: 1px solid var(--hair);
   border-radius: var(--r-lg);
   padding: 18px 22px;
+  max-width: 100%;
   overflow-x: auto;
   margin: 1.3em 0;
   line-height: 1.65;
@@ -613,9 +614,15 @@ a:hover { color: var(--blue-lit); }
 .prose a:hover { text-decoration-color: var(--blue); }
 .prose hr { border: none; border-top: 1px solid var(--hair); margin: 2.6em 0; }
 
-/* 表格：markdown 原生 <table> 默认无样式，逐步补全（发丝边框 + 表头底色） */
+/* 表格：markdown 原生 <table> 默认无样式，逐步补全（发丝边框 + 表头底色）。
+   宽表格（列多 / 单元格含长命令）在手机端会把整页撑出横向滚动条，
+   实测 390px 视口曾溢出 96px。改成自身横向滚动，正文保持不溢出。 */
 .prose table {
+  display: block;
   width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border-collapse: collapse;
   margin: 1.4em 0;
   font-size: 0.9rem;
@@ -806,4 +813,42 @@ html.js-anim .rv.in { opacity: 1; transform: none; }
     transition-duration: 0.01ms !important;
   }
   .rv { opacity: 1; transform: none; }
+}
+
+/* ── 访客聊天入口（点击才加载第三方 SDK）──────────────
+   不用 SDK 的自动挂件：其脚本 3.24 MB / Brotli 874 KB，
+   全站自动加载会拖垮 24 KB 的首屏。这里只放一个纯 CSS 轻量按钮，
+   点击后才注入 SDK；加载完成由 SDK 自己的挂件接管入口。
+   配色全部走主题 token，亮/暗色自动跟随。 */
+#contact-launcher {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 900;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px; /* 触控目标 ≥ 44px */
+  padding: 0 16px;
+  border: 1px solid var(--hair-strong);
+  border-radius: 999px;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 0.86rem;
+  letter-spacing: 0.01em;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: transform 0.25s var(--ease), border-color 0.25s var(--ease);
+}
+#contact-launcher:hover { transform: translateY(-2px); border-color: var(--blue); }
+#contact-launcher:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+#contact-launcher[disabled] { cursor: progress; opacity: 0.72; transform: none; }
+#contact-launcher svg { width: 16px; height: 16px; flex-shrink: 0; color: var(--blue); }
+
+@media (max-width: 640px) {
+  #contact-launcher { right: 16px; bottom: 16px; padding: 0 14px; }
+}
+@media print {
+  #contact-launcher { display: none !important; }
 }

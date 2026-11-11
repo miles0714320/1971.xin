@@ -12,6 +12,9 @@ const recent = articles.slice(0, 4);
 
 const fmt = (d: Date) =>
   d.toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric" });
+
+// 状态无关的标签：工具库暂时留空时不把「0」印在首屏，补内容后自动显示数量。
+const toolsLabel = tools.length > 0 ? `${tools.length} 个收录` : "整理中";
 ---
 
 <Base title="1971.xin · 工具、技术和数字生活">
@@ -22,7 +25,7 @@ const fmt = (d: Date) =>
         <p class="eyebrow rv" data-d="0"><span class="pulse"></span>ONLINE · 罗祥的个人站</p>
         <h1 class="rv" data-d="1">工具、技术<br />和<em>数字生活</em>。</h1>
         <p class="hero-sub rv" data-d="2">
-          收录我<b>真实在用</b>的工具，记录折腾技术的过程，
+          把<b>真实在用</b>的工具、折腾技术的过程，慢慢收拢到这里，
           顺手留一点没更好去处的想法。
         </p>
         <p class="hero-sub rv" data-d="2">
@@ -51,11 +54,11 @@ const fmt = (d: Date) =>
           </div>
           <div class="demo-body">
             <span class="ln"><span class="p">$</span> <span class="s">1971.xin --status</span></span>
-            <span class="ln"><span class="c">✓</span> <span class="s">站点</span>      <span class="m">在线</span></span>
-            <span class="ln"><span class="c">✓</span> <span class="s">工具库</span>    <span class="m">{tools.length} 个收录</span></span>
+            <span class="ln"><span class="c">✓</span> <span class="s">架构</span>      <span class="m">纯静态</span></span>
+            <span class="ln"><span class="c">✓</span> <span class="s">工具库</span>    <span class="m">{toolsLabel}</span></span>
             <span class="ln"><span class="c">✓</span> <span class="s">文章</span>      <span class="m">{articles.length} 篇</span></span>
             <span class="ln"><span class="c">✓</span> <span class="s">部署</span>      <span class="m">push → 40s</span></span>
-            <span class="ln"><span class="c">✓</span> <span class="s">成本</span>      <span class="m">¥0 / 月</span></span>
+            <span class="ln"><span class="c">✓</span> <span class="s">成本</span>      <span class="m">托管 ¥0 / 月</span></span>
             <span class="ln"></span>
             <span class="ln"><span class="p">$</span> <span class="s">echo "够用就好"</span></span>
             <span class="ln"><span class="m">够用就好</span> <span class="cur"></span></span>
@@ -118,7 +121,7 @@ const fmt = (d: Date) =>
   <section class="wrap">
     <div class="cta rv">
       <h2>想找个安静角落聊聊工具和技术？</h2>
-      <p>这个域名是我在互联网上的门牌号 —— 收邮件、放东西、记录念头。嫌邮件太重，也可以先从工具库翻起。</p>
+      <p>这个域名是我在互联网上的门牌号 —— 收邮件、放东西、记录念头。嫌邮件太重，也可以先从文章翻起。</p>
       <div class="hero-cta">
         <a class="btn-main" href="mailto:luoxiang@agent.qq.com">
           <span>发封邮件</span>

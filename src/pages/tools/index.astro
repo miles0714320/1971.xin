@@ -4,6 +4,9 @@ import { getCollection } from "astro:content";
 
 const tools = (await getCollection("tools")).sort((a, b) => a.data.order - b.data.order);
 
+// 状态无关的空态标签：留空时不在标题上印「0」，补内容后自动显示数量。
+const toolsLabel = tools.length > 0 ? `${tools.length} 个收录` : "整理中";
+
 // 按分类分组，保持首次出现的顺序
 const groups = new Map<string, typeof tools>();
 for (const tool of tools) {
@@ -20,13 +23,13 @@ for (const tool of tools) {
   <section class="hero wrap">
     <div class="hero-grid">
       <div class="hero-l">
-        <p class="eyebrow rv"><span class="pulse"></span>TOOLS · {tools.length} 个收录</p>
+        <p class="eyebrow rv"><span class="pulse"></span>TOOLS · {toolsLabel}</p>
         <h1 class="rv" data-d="1">工具库</h1>
         <p class="hero-sub rv" data-d="2">
-          这里没有恰饭推荐，只有我<b>真实在用、且愿意继续用</b>的东西。
+          这里只放我<b>真实在用、且愿意继续用</b>的东西。
         </p>
         <p class="hero-sub rv" data-d="2">
-          每一条都是自己试过之后留下的。点卡片直达官网。
+          没有恰饭，没有软文 —— 点卡片直达官网。
         </p>
       </div>
       <div class="hero-r rv" data-d="2">
@@ -38,9 +41,13 @@ for (const tool of tools) {
             <span class="demo-title">~/tools — list</span>
           </div>
           <div class="demo-body">
-            {[...groups.entries()].map(([cat, list]) => (
-              <span class="ln"><span class="p">{cat}</span> <span class="c">({list.length})</span></span>
-            ))}
+            {groups.size === 0 ? (
+              <span class="ln"><span class="c"># 名单整理中…</span></span>
+            ) : (
+              [...groups.entries()].map(([cat, list]) => (
+                <span class="ln"><span class="p">{cat}</span> <span class="c">({list.length})</span></span>
+              ))
+            )}
             <span class="ln"></span>
             <span class="ln"><span class="p">$</span> <span class="s">cat 使用心得.md</span></span>
             <span class="ln"><span class="c"># 每一条都亲手试过</span></span>

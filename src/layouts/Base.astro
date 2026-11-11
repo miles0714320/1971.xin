@@ -151,7 +151,69 @@ const current = (href: string) =>
       [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
     </style>
 
-    <!-- Knocket 访客聊天挂件：全站只加载一次，is:inline 避免 Astro 打包处理外链 -->
-    <script is:inline src="https://trtc.io/knocket-sdk/sdk.js?identifier=2e613a58a060536fbd" async></script>
+    <!-- ── 访客聊天：点击才加载 ──────────────────────────────
+         SDK（trtc.io/knocket-sdk/sdk.js）原始 3.24 MB / Brotli 874 KB，
+         全站自动加载会把 24 KB 的首屏拖垮。这里只放一个纯 CSS 轻量按钮，
+         用户点击后才注入脚本；未交互访客零第三方请求。
+         加载完成后由 SDK 自带的挂件接管入口（见下方 handoff 逻辑）。
+         is:inline 保证 Astro 原样输出，不参与打包。 -->
+    <button id="contact-launcher" type="button" aria-label="打开在线聊天" title="在线聊聊">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+      </svg>
+      <span>聊聊</span>
+    </button>
+    <script is:inline>
+      (function () {
+        var btn = document.getElementById("contact-launcher");
+        if (!btn) return;
+        var label = btn.querySelector("span");
+        var SDK_URL = "https://trtc.io/knocket-sdk/sdk.js?identifier=2e613a58a060536fbd";
+        var injected = false;
+
+        // SDK 就绪后自动展开聊天，避免用户点两次。
+        // showChat 是 SDK 的 React 组件挂载后才写到 contactWidget 上的，故短轮询等它。
+        window.ContactWidgetOnReady = function () {
+          var tries = 0;
+          var timer = setInterval(function () {
+            var w = window.contactWidget;
+            if (w && typeof w.showChat === "function") {
+              w.showChat();
+              btn.remove(); // 官方挂件已就绪，撤掉自建入口
+              clearInterval(timer);
+            } else if (++tries > 20) {
+              clearInterval(timer); // 兜底：官方挂件自身的按钮仍可点
+            }
+          }, 150);
+        };
+
+        btn.addEventListener("click", function () {
+          var w = window.contactWidget;
+          if (injected) {
+            if (w && typeof w.showChat === "function") w.showChat();
+            return;
+          }
+          injected = true;
+          btn.disabled = true;
+          btn.setAttribute("aria-busy", "true");
+          label.textContent = "连接中…";
+
+          var s = document.createElement("script");
+          s.src = SDK_URL;
+          s.async = true;
+          s.onload = function () {
+            // 万一 ready 钩子没触发，5 秒后也让官方挂件接管，避免两个入口重叠
+            setTimeout(function () { if (btn.isConnected) btn.remove(); }, 5000);
+          };
+          s.onerror = function () {
+            injected = false;
+            btn.disabled = false;
+            btn.removeAttribute("aria-busy");
+            label.textContent = "重试";
+          };
+          document.body.appendChild(s);
+        });
+      })();
+    </script>
   </body>
 </html>
