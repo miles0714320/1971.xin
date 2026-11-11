@@ -150,5 +150,8 @@ const current = (href: string) =>
       [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
       [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
     </style>
+
+    <!-- Knocket 访客聊天挂件：全站只加载一次，is:inline 避免 Astro 打包处理外链 -->
+    <script is:inline src="https://trtc.io/knocket-sdk/sdk.js?identifier=2e613a58a060536fbd" async></script>
   </body>
 </html>
